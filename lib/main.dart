@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kinder_pass_assignment/helper/theme.dart';
+import 'package:kinder_pass_assignment/providers/movies.dart';
 import 'package:kinder_pass_assignment/providers/news.dart';
 import 'package:kinder_pass_assignment/screens/home/home_screen.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<News>(
           create: (context) => News(),
         ),
+        ChangeNotifierProvider<Movies>(
+          create: (context) => Movies(),
+        )
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,

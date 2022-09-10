@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:kinder_pass_assignment/helper/constants.dart';
 import 'package:kinder_pass_assignment/helper/size_config.dart';
-import 'package:kinder_pass_assignment/models/new_model.dart';
+import 'package:kinder_pass_assignment/models/movies_model.dart';
+import 'package:kinder_pass_assignment/providers/movies.dart';
 import 'package:kinder_pass_assignment/providers/news.dart';
-import 'package:kinder_pass_assignment/screens/news/article.dart';
+import 'package:kinder_pass_assignment/screens/movies/movie_item.dart';
 import 'package:kinder_pass_assignment/shared/loading_bar.dart';
 import 'package:provider/provider.dart';
 
-class NewsScreen extends StatefulWidget {
-  const NewsScreen({Key? key}) : super(key: key);
+import '../../helper/constants.dart';
+
+class MoviesScreen extends StatefulWidget {
+  const MoviesScreen({Key? key}) : super(key: key);
 
   @override
-  State<NewsScreen> createState() => _NewsScreenState();
+  State<MoviesScreen> createState() => _MoviesScreenState();
 }
 
-class _NewsScreenState extends State<NewsScreen> {
+class _MoviesScreenState extends State<MoviesScreen> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      var newsProvider = Provider.of<News>(context, listen: false);
-      newsProvider.getAllNews();
+      var moviesProvider = Provider.of<Movies>(context, listen: false);
+      moviesProvider.getAllMovies();
     });
-
     // TODO: implement initState
     super.initState();
   }
@@ -30,34 +31,35 @@ class _NewsScreenState extends State<NewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("News"),
+          title: Text("Movies"),
         ),
-        body: Consumer<News>(builder: (context, item, _) {
+        body: Consumer<Movies>(builder: (context, item, _) {
           return MyLoadingBar(
             isLoading: item.isLoading,
             child: item.isLoading
                 ? Container()
                 : SafeArea(
                     child: ListView.builder(
-                        itemCount: item.news.length,
+                        itemCount: item.movies.length,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () {
-                              NewsModel newsModel = NewsModel(
-                                  title: item.news[index].title,
-                                  source: item.news[index].source,
-                                  image: item.news[index].image,
-                                  content: item.news[index].content,
-                                  date: item.news[index].date,
-                                  author: item.news[index].author,
-                                  desc: item.news[index].desc,
-                                  url: item.news[index].url);
+                              MovieModel movieModel = MovieModel(
+                                  title: item.movies[index].title,
+                                  releaseDate: item.movies[index].releaseDate,
+                                  image: item.movies[index].image,
+                                  adult: item.movies[index].adult,
+                                  genres: item.movies[index].genres,
+                                  popularity: item.movies[index].popularity,
+                                  voteCount: item.movies[index].voteCount,
+                                  desc: item.movies[index].desc);
 
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          NewsArticle(article: newsModel)));
+                                      builder: (context) => MovieItem(
+                                            movieModel: movieModel,
+                                          )));
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -73,8 +75,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                   getProportionateScreenWidth(1)),
                               child: Row(children: [
                                 Image.network(
-                                  item.news[index].image ??
-                                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkfp5mocLO_5ScsRsmyT3DACKNyoatjpQTtQ&usqp=CAU",
+                                  item.movies[index].image ??
+                                      "https://i.pinimg.com/originals/54/51/75/54517514b7e9c8c21cb1526176c30732.jpg",
                                   width: getProportionateScreenWidth(22),
                                   height: getProportionateScreenHeight(12),
                                   fit: BoxFit.fill,
@@ -86,12 +88,13 @@ class _NewsScreenState extends State<NewsScreen> {
                                   child: Column(
                                     children: [
                                       Text(
-                                        item.news[index].title ?? "Title",
+                                        item.movies[index].title ?? "Title",
                                         // overflow: TextOverflow.ellipsis,
                                         // maxLines: 3,
                                         style: TextStyle(
                                             fontSize:
-                                                getProportionateScreenWidth(4),
+                                                getProportionateScreenWidth(5),
+                                            fontWeight: FontWeight.bold,
                                             fontFamily: "Poppins"),
                                       )
                                     ],
